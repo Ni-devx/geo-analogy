@@ -5,13 +5,30 @@ const searchList = document.getElementById("searchList");
 const searchCount = document.getElementById("searchCount");
 
 const headings = Array.from(document.querySelectorAll("main h3"));
+
+function collectTextForHeading(h3) {
+  let text = h3.textContent || "";
+  let node = h3.nextElementSibling;
+
+  while (node && node.tagName.toLowerCase() !== "h3") {
+    text += ` ${node.textContent || ""}`;
+    node = node.nextElementSibling;
+  }
+
+  return text.replace(/\s+/g, " ").trim();
+}
+
 const index = headings.map((h3) => {
   const section = h3.closest("section");
   const h2 = section ? section.querySelector("h2") : null;
+  const h2Text = h2 ? h2.textContent.trim() : "";
+  const contentText = collectTextForHeading(h3);
+
   return {
     id: h3.id,
     h3: h3.textContent.trim(),
-    h2: h2 ? h2.textContent.trim() : "",
+    h2: h2Text,
+    haystack: `${h2Text} ${contentText}`.toLowerCase(),
   };
 });
 
@@ -61,9 +78,7 @@ function runSearch() {
     return;
   }
 
-  const results = index.filter((item) => {
-    return item.h3.toLowerCase().includes(term) || item.h2.toLowerCase().includes(term);
-  });
+  const results = index.filter((item) => item.haystack.includes(term));
 
   renderResults(results);
   openDropdown();
