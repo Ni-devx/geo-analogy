@@ -3,244 +3,265 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Geo Analogy</title>
+  <title>Geo Analogy — GeoGuessr攻略まとめ</title>
   <meta name="description" content="GeoGuessrを勘ではなく情報処理として整理する、初心者〜中級者向けの体系化まとめ。" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="page">
     <header class="hero" id="top">
-      <div class="hero-inner">
-        <div class="hero-text">
-          <p class="eyebrow">GeoGuessr How-to</p>
-          <h1>Geo Analogy</h1>
-        </div>
-      </div>
+      <p class="eyebrow">GeoGuessr攻略まとめページ</p>
+      <h1>Geo Analogy</h1>
+      <p class="lead">
+        勘ではなく「情報処理」として整理するための個人研究ノート。<strong class="em">体系化</strong>と
+        <strong class="em">比較軸</strong>で、一致レベルや国特定までの道筋を明確にする。
+      </p>
+      <p class="note">※日記や体験談ではなく、観察と検証をまとめた公開版メモ。</p>
     </header>
 
-    <div class="toolbar">
-      <div class="search">
-        <label for="searchInput">ページ内検索</label>
-        <div class="search-row">
-          <input id="searchInput" type="search" placeholder="例: 電柱 / ナンバープレート / 初動" />
-          <button id="searchBtn" type="button">検索</button>
-          <button id="clearBtn" type="button" class="ghost">クリア</button>
+    <section class="search" aria-label="検索">
+      <label for="searchInput">ページ内検索</label>
+      <div class="search-wrapper">
+        <input id="searchInput" type="search" placeholder="例: 電柱 / ナンバープレート / 初動" autocomplete="off" />
+        <button id="searchClear" type="button">クリア</button>
+        <div class="search-dropdown" id="searchDropdown" hidden>
+          <div class="search-count" id="searchCount">一致: 0</div>
+          <ul id="searchList"></ul>
         </div>
-        <div class="search-hint">2文字以上で検索。該当セクションは自動で開きます。</div>
       </div>
-      <div class="search-result" id="searchResult">一致: 0</div>
-    </div>
+      <p class="hint">2文字以上で検索。結果は<strong class="em">h3</strong>と関連する<strong class="em">h2</strong>を表示。</p>
+    </section>
 
     <div class="layout">
-      <aside class="toc">
-        <div class="toc-inner">
-          <div class="toc-title">目次</div>
-          <nav>
-            <a href="#inference">1. 推論フレーム</a>
-            <a href="#japan">2. 日本攻略</a>
-            <a href="#world">3. 世界攻略</a>
-            <a href="#pitfalls">4. よくある誤認</a>
-            <a href="#research">5. 今後の研究課題</a>
-          </nav>
-          <div class="toc-note">
-            巨大1ページ型は「構造を先に固定」しないと破綻する。
-          </div>
-          <a class="back-top" href="#top">ページ上部へ</a>
-        </div>
+      <aside class="toc" aria-label="目次">
+        <h2>目次</h2>
+        <nav class="toc-list">
+          <a href="#inference">1. 推論フレーム</a>
+          <a class="toc-sub" href="#inference-layer">情報のレイヤー分類</a>
+          <a class="toc-sub" href="#inference-order">判断順序テンプレ</a>
+          <a class="toc-sub" href="#inference-30s">初動30秒理論</a>
+          <a class="toc-sub" href="#inference-note">推論メモの型</a>
+
+          <a href="#japan">2. 日本攻略</a>
+          <a class="toc-sub" href="#japan-pole">電柱</a>
+          <a class="toc-sub" href="#japan-sign">標識</a>
+          <a class="toc-sub" href="#japan-road">道路</a>
+          <a class="toc-sub" href="#japan-house">住宅</a>
+          <a class="toc-sub" href="#japan-terrain">地形</a>
+
+          <a href="#world">3. 世界攻略</a>
+          <a class="toc-sub" href="#world-start">初動判定</a>
+          <a class="toc-sub" href="#world-plate">ナンバープレート</a>
+          <a class="toc-sub" href="#world-line">道路線</a>
+          <a class="toc-sub" href="#world-sign">標識</a>
+          <a class="toc-sub" href="#world-climate">気候・植生</a>
+          <a class="toc-sub" href="#world-vehicle">車・路面</a>
+
+          <a href="#pitfalls">4. よくある誤認</a>
+          <a class="toc-sub" href="#pitfalls-pairs">代表的な誤認ペア</a>
+          <a class="toc-sub" href="#pitfalls-axis">見分ける軸</a>
+          <a class="toc-sub" href="#pitfalls-cause">ミスの原因</a>
+
+          <a href="#research">5. 今後の研究課題</a>
+          <a class="toc-sub" href="#research-open">未整理分野</a>
+          <a class="toc-sub" href="#research-next">追加予定</a>
+          <a class="toc-sub" href="#research-log">検証ログの型</a>
+        </nav>
       </aside>
 
       <main class="content" id="content">
-        <details id="inference" class="section" open>
-          <summary>
-            <span class="section-number">1</span>
-            <span class="section-text">
-              <span class="section-title">推論フレーム</span>
-              <span class="section-subtitle">「何から見るか」を固定する</span>
-            </span>
-          </summary>
-          <div class="section-body">
-            <div class="grid">
-              <div class="card">
-                <h3>情報のレイヤー分類</h3>
-                <ul>
-                  <li>言語: 標識・広告・道路表記</li>
-                  <li>インフラ: 電柱、標識支柱、道路線</li>
-                  <li>地形: 山の形、河川、平野の広がり</li>
-                  <li>気候: 植生、空の色、雪対策</li>
-                  <li>人工物規格: ガードレール、屋根材、窓枠</li>
-                </ul>
-              </div>
-              <div class="card">
-                <h3>判断順序テンプレ</h3>
-                <ol>
-                  <li>走行方向・言語系統・Googleカー</li>
-                  <li>道路線・標識形・ナンバープレート</li>
-                  <li>建築規格・電柱・地形</li>
-                  <li>地域差: 北/南、沿岸/内陸、都市/郊外</li>
-                </ol>
-              </div>
-            </div>
-            <div class="callout">
-              <h3>初動30秒理論</h3>
-              <p>最初の30秒で「国・地域の仮説」を出し、残りで反証を探す。情報収集の順序を固定して、迷い時間を削る。</p>
-            </div>
-          </div>
-        </details>
+        <section class="section" id="inference">
+          <h2>1. 推論フレーム</h2>
+          <p class="section-lead">「何から見るか」を固定して、判断のブレを減らす。</p>
 
-        <details id="japan" class="section">
-          <summary>
-            <span class="section-number">2</span>
-            <span class="section-text">
-              <span class="section-title">日本攻略</span>
-              <span class="section-subtitle">一致レベルまで絞る力を整理</span>
-            </span>
-          </summary>
-          <div class="section-body">
-            <div class="grid">
-              <div class="card">
-                <h3>電柱</h3>
-                <ul>
-                  <li>腕の数: 1〜3本の出方</li>
-                  <li>変圧器: 形・数・配置</li>
-                  <li>配線密度: 都市/郊外の差</li>
-                  <li>地域傾向: 北日本の高所配線</li>
-                </ul>
-              </div>
-              <div class="card">
-                <h3>標識</h3>
-                <ul>
-                  <li>フォント: ゴシック系の太さ</li>
-                  <li>形状: 角丸の差</li>
-                  <li>支柱タイプ: 丸柱/角柱</li>
-                </ul>
-              </div>
-              <div class="card">
-                <h3>道路</h3>
-                <ul>
-                  <li>ガードレール: 形状/支柱間隔</li>
-                  <li>センターライン: 色と破線パターン</li>
-                  <li>歩道構造: 段差/縁石の材質</li>
-                </ul>
-              </div>
-              <div class="card">
-                <h3>住宅</h3>
-                <ul>
-                  <li>屋根傾斜: 雪対策/台風対策</li>
-                  <li>壁材: サイディング/木材/タイル</li>
-                  <li>雪対策構造: 高床/落雪防止</li>
-                </ul>
-              </div>
-              <div class="card">
-                <h3>地形</h3>
-                <ul>
-                  <li>山の形: 稜線の連続性</li>
-                  <li>平野の広がり: 視界の抜け感</li>
-                  <li>河川の向き: 山地との位置関係</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </details>
+          <h3 id="inference-layer">情報のレイヤー分類</h3>
+          <p>
+            まずは情報を<strong class="em">層</strong>で見る。どの層が強い手がかりかを把握すると、焦点がズレなくなる。
+          </p>
+          <ul>
+            <li><strong class="em">言語</strong>: 標識、広告、地名、アルファベットの形</li>
+            <li>インフラ: 電柱、標識支柱、道路標示、ガードレール</li>
+            <li>地形: 山の稜線、河川の向き、視界の抜け方</li>
+            <li>気候: 植生、空の色、雪対策、乾燥度</li>
+            <li>人工物規格: 屋根材、窓枠、歩道の縁石</li>
+          </ul>
 
-        <details id="world" class="section">
-          <summary>
-            <span class="section-number">3</span>
-            <span class="section-text">
-              <span class="section-title">世界攻略</span>
-              <span class="section-subtitle">国特定までを最速で整理</span>
-            </span>
-          </summary>
-          <div class="section-body">
-            <div class="grid">
-              <div class="card">
-                <h3>初動判定</h3>
-                <ul>
-                  <li>走行方向: 左/右</li>
-                  <li>言語系統: ラテン/キリル/アラビア等</li>
-                  <li>Googleカー: 車体色/写り込み</li>
-                </ul>
-              </div>
-              <div class="card">
-                <h3>ナンバープレート</h3>
-                <ul>
-                  <li>色: 白/黄/青</li>
-                  <li>位置: 前後/後のみ</li>
-                  <li>EU帯: 左端の青帯有無材質</li>
-                </ul>
-              </div>
-              <div class="card">
-                <h3>道路線</h3>
-                <ul>
-                  <li>黄色か白か</li>
-                  <li>破線パターン: 長短・密度</li>
-                  <li>路肩線: 有無と色</li>
-                </ul>
-              </div>
-              <div class="card">
-                <h3>標識</h3>
-                <ul>
-                  <li>フォント: 角ばり/丸み</li>
-                  <li>警告標識形: 三角/ひし形</li>
-                  <li>支柱・反射材: 形と色</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </details>
+          <h3 id="inference-order">判断順序テンプレ</h3>
+          <ol>
+            <li>走行方向・言語系統・Googleカー</li>
+            <li>道路線・標識形・ナンバープレート</li>
+            <li>建築規格・電柱・地形</li>
+            <li>地域差: 北/南、沿岸/内陸、都市/郊外</li>
+          </ol>
+          <p>
+            ポイントは<strong class="em">序盤で仮説を置く</strong>こと。仮説を置くと「反証探し」ができる。
+          </p>
 
-        <details id="pitfalls" class="section">
-          <summary>
-            <span class="section-number">4</span>
-            <span class="section-text">
-              <span class="section-title">よくある誤認</span>
-              <span class="section-subtitle">かなり重要</span>
-            </span>
-          </summary>
-          <div class="section-body">
-            <div class="callout warning">
-              <h3>誤認の例</h3>
-              <ul>
-                <li>北海道とカナダ</li>
-                <li>九州と韓国南部</li>
-                <li>東欧と南米</li>
-              </ul>
-            </div>
-            <p>似た景観を「何が違うか」で比較メモ化する。誤認ペアごとに決定的な差をメモする。</p>
-          </div>
-        </details>
+          <h3 id="inference-30s">初動30秒理論</h3>
+          <p>
+            30秒以内に「国 or 地域の当たり」を出す。残りは細部の検証に使う。
+          </p>
+          <ul>
+            <li>最初に見るのは<strong class="em">言語・道路線・車体</strong></li>
+            <li>迷ったら「大陸」→「国」→「地域」の順で仮説を縮める</li>
+            <li>反証が出たら<strong class="em">仮説を捨てる勇気</strong>を持つ</li>
+          </ul>
 
-        <details id="research" class="section">
-          <summary>
-            <span class="section-number">5</span>
-            <span class="section-text">
-              <span class="section-title">今後の研究課題</span>
-              <span class="section-subtitle">未整理領域の整理用メモ</span>
-            </span>
-          </summary>
-          <div class="section-body">
-            <div class="grid">
-              <div class="card">
-                <h3>未整理分野</h3>
-                <ul>
-                  <li>地方都市の配線パターン</li>
-                  <li>農地インフラの差</li>
-                  <li>沿岸部の標識規格</li>
-                </ul>
-              </div>
-              <div class="card">
-                <h3>今後追加予定</h3>
-                <ul>
-                  <li>画像データベース化</li>
-                  <li>日本/世界のページ分割</li>
-                  <li>推論テンプレの改善材質</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </details>
+          <h3 id="inference-note">推論メモの型</h3>
+          <p>
+            メモは「観察→仮説→反証」の順で記録すると再利用しやすい。
+          </p>
+          <ul>
+            <li>観察: 「白ナンバー」「三角警告標識」「乾いた草地」</li>
+            <li>仮説: 「南米の可能性」</li>
+            <li>反証: 「道路線が白で細い → 南米より欧州寄り」</li>
+          </ul>
+        </section>
+
+        <section class="section" id="japan">
+          <h2>2. 日本攻略</h2>
+          <p class="section-lead">一致レベルまで絞るための比較ポイント。</p>
+
+          <h3 id="japan-pole">電柱</h3>
+          <ul>
+            <li>腕の数: 1〜3本の出方。<strong class="em">横向きの腕が多いほど都市部寄り</strong></li>
+            <li>変圧器: 形・数・配置。地域によって配置の癖がある</li>
+            <li>配線密度: 都市部は密、地方は疎。<strong class="em">高さ</strong>も重要</li>
+            <li>地域傾向: 北日本は雪対策で高所配線が多い</li>
+          </ul>
+
+          <h3 id="japan-sign">標識</h3>
+          <ul>
+            <li>フォント: ゴシック系の太さ、丸み</li>
+            <li>形状: 角の丸さ、縁取りの太さ</li>
+            <li>支柱タイプ: 丸柱/角柱、反射材の色</li>
+          </ul>
+
+          <h3 id="japan-road">道路</h3>
+          <ul>
+            <li>ガードレール: 形状/支柱間隔。<strong class="em">波形の深さ</strong>に注目</li>
+            <li>センターライン: 色と破線パターン</li>
+            <li>歩道構造: 段差/縁石の材質、点字ブロックの配置</li>
+          </ul>
+
+          <h3 id="japan-house">住宅</h3>
+          <ul>
+            <li>屋根傾斜: 雪対策/台風対策</li>
+            <li>壁材: サイディング/木材/タイル</li>
+            <li>雪対策構造: 高床/落雪防止の形</li>
+          </ul>
+
+          <h3 id="japan-terrain">地形</h3>
+          <ul>
+            <li>山の形: 稜線の連続性</li>
+            <li>平野の広がり: 視界の抜け感</li>
+            <li>河川の向き: 山地との位置関係</li>
+          </ul>
+        </section>
+
+        <section class="section" id="world">
+          <h2>3. 世界攻略</h2>
+          <p class="section-lead">国特定までを最速で整理。</p>
+
+          <h3 id="world-start">初動判定</h3>
+          <ul>
+            <li>走行方向: 左/右</li>
+            <li>言語系統: ラテン/キリル/アラビア/漢字</li>
+            <li>Googleカー: 車体色、アンテナ、写り込み</li>
+            <li><strong class="em">道路線の色</strong>は最初に確認する</li>
+          </ul>
+
+          <h3 id="world-plate">ナンバープレート</h3>
+          <ul>
+            <li>色: 白/黄/青</li>
+            <li>位置: 前後/後のみ</li>
+            <li>EU帯: 左端の青帯有無</li>
+            <li>サイズ感: 横長/縦長で国を絞る</li>
+          </ul>
+
+          <h3 id="world-line">道路線</h3>
+          <ul>
+            <li>黄色か白か</li>
+            <li>破線パターン: 長短・密度</li>
+            <li>路肩線: 有無と色</li>
+          </ul>
+
+          <h3 id="world-sign">標識</h3>
+          <ul>
+            <li>フォント: 角ばり/丸み</li>
+            <li>警告標識形: 三角/ひし形</li>
+            <li>支柱・反射材: 形と色</li>
+          </ul>
+
+          <h3 id="world-climate">気候・植生</h3>
+          <ul>
+            <li>乾燥度: 砂の色、草の密度</li>
+            <li>植生: ユーカリ/針葉樹/ヤシの有無</li>
+            <li>空の色: 霞み、湿度感</li>
+          </ul>
+
+          <h3 id="world-vehicle">車・路面</h3>
+          <ul>
+            <li>車種: ピックアップが多い地域/少ない地域</li>
+            <li>路面: アスファルトの色、補修跡</li>
+            <li>縁石: 色塗りの有無</li>
+          </ul>
+        </section>
+
+        <section class="section" id="pitfalls">
+          <h2>4. よくある誤認</h2>
+          <p class="section-lead"><strong class="em">誤認ペア</strong>は最重要。似ている理由を言語化する。</p>
+
+          <h3 id="pitfalls-pairs">代表的な誤認ペア</h3>
+          <ul>
+            <li>北海道とカナダ</li>
+            <li>九州と韓国南部</li>
+            <li>東欧と南米</li>
+            <li>北欧とカナダ西部</li>
+            <li>オーストラリアと南アフリカ</li>
+          </ul>
+
+          <h3 id="pitfalls-axis">見分ける軸</h3>
+          <ul>
+            <li>道路線の色・太さ</li>
+            <li>標識フォントの形</li>
+            <li>植生の密度と樹形</li>
+            <li>建築材の色と質感</li>
+          </ul>
+
+          <h3 id="pitfalls-cause">ミスの原因</h3>
+          <ul>
+            <li><strong class="em">先入観</strong>で決め打ちする</li>
+            <li>反証を探さずに進める</li>
+            <li>「似てる」で止めて比較をしない</li>
+          </ul>
+        </section>
+
+        <section class="section" id="research">
+          <h2>5. 今後の研究課題</h2>
+          <p class="section-lead">未整理領域を洗い出し、次の追加につなげる。</p>
+
+          <h3 id="research-open">未整理分野</h3>
+          <ul>
+            <li>地方都市の配線パターン</li>
+            <li>農地インフラの差</li>
+            <li>沿岸部の標識規格</li>
+          </ul>
+
+          <h3 id="research-next">追加予定</h3>
+          <ul>
+            <li>画像データベース化</li>
+            <li>日本/世界のページ分割</li>
+            <li>推論テンプレの改善</li>
+          </ul>
+
+          <h3 id="research-log">検証ログの型</h3>
+          <ul>
+            <li>日時 / マップ / 予想 / 結果</li>
+            <li>決め手になった要素</li>
+            <li>次回検証するポイント</li>
+          </ul>
+        </section>
       </main>
     </div>
 

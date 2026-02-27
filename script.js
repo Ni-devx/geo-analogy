@@ -1,132 +1,88 @@
 const searchInput = document.getElementById("searchInput");
-const searchBtn = document.getElementById("searchBtn");
-const clearBtn = document.getElementById("clearBtn");
-const searchResult = document.getElementById("searchResult");
-const content = document.getElementById("content");
-const sections = Array.from(document.querySelectorAll("details.section"));
+const searchClear = document.getElementById("searchClear");
+const searchDropdown = document.getElementById("searchDropdown");
+const searchList = document.getElementById("searchList");
+const searchCount = document.getElementById("searchCount");
 
-function unwrapMarks() {
-  const marks = content.querySelectorAll("mark.search-hit");
-  marks.forEach((mark) => {
-    const text = document.createTextNode(mark.textContent || "");
-    mark.replaceWith(text);
-  });
-}
+const headings = Array.from(document.querySelectorAll("main h3"));
+const index = headings.map((h3) => {
+  const section = h3.closest("section");
+  const h2 = section ? section.querySelector("h2") : null;
+  return {
+    id: h3.id,
+    h3: h3.textContent.trim(),
+    h2: h2 ? h2.textContent.trim() : "",
+  };
+});
 
-function highlightText(term) {
-  const lowerTerm = term.toLowerCase();
-  let total = 0;
+function renderResults(results) {
+  searchList.innerHTML = "";
+  searchCount.textContent = `一致: ${results.length}`;
 
-  const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, {
-    acceptNode: (node) => {
-      if (!node.nodeValue || !node.nodeValue.trim()) {
-        return NodeFilter.FILTER_REJECT;
-      }
-      const parent = node.parentElement;
-      if (!parent) {
-        return NodeFilter.FILTER_REJECT;
-      }
-      if (parent.closest("mark")) {
-        return NodeFilter.FILTER_REJECT;
-      }
-      return NodeFilter.FILTER_ACCEPT;
-    },
-  });
-
-  const nodes = [];
-  while (walker.nextNode()) {
-    nodes.push(walker.currentNode);
+  if (results.length === 0) {
+    const empty = document.createElement("li");
+    empty.textContent = "該当なし";
+    searchList.appendChild(empty);
+    return;
   }
 
-  nodes.forEach((node) => {
-    const text = node.nodeValue;
-    const lowerText = text.toLowerCase();
-    let index = lowerText.indexOf(lowerTerm);
+  results.slice(0, 20).forEach((item) => {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = `#${item.id}`;
 
-    if (index === -1) {
-      return;
-    }
+    const h2Span = document.createElement("span");
+    h2Span.className = "search-h2";
+    h2Span.textContent = item.h2;
 
-    const fragment = document.createDocumentFragment();
-    let lastIndex = 0;
+    const h3Span = document.createElement("span");
+    h3Span.className = "search-h3";
+    h3Span.textContent = item.h3;
 
-    while (index !== -1) {
-      if (index > lastIndex) {
-        fragment.appendChild(document.createTextNode(text.slice(lastIndex, index)));
-      }
-
-      const mark = document.createElement("mark");
-      mark.className = "search-hit";
-      mark.textContent = text.slice(index, index + term.length);
-      fragment.appendChild(mark);
-      total += 1;
-
-      lastIndex = index + term.length;
-      index = lowerText.indexOf(lowerTerm, lastIndex);
-    }
-
-    if (lastIndex < text.length) {
-      fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
-    }
-
-    node.replaceWith(fragment);
-  });
-
-  return total;
-}
-
-function openSectionsWithHits() {
-  sections.forEach((section) => {
-    const hasHit = section.querySelector("mark.search-hit");
-    if (hasHit) {
-      section.open = true;
-    }
+    a.appendChild(h2Span);
+    a.appendChild(h3Span);
+    li.appendChild(a);
+    searchList.appendChild(li);
   });
 }
 
-function updateResult(count) {
-  searchResult.textContent = `一致: ${count}`;
+function openDropdown() {
+  searchDropdown.hidden = false;
+}
+
+function closeDropdown() {
+  searchDropdown.hidden = true;
 }
 
 function runSearch() {
-  const term = searchInput.value.trim();
-
-  unwrapMarks();
-
+  const term = searchInput.value.trim().toLowerCase();
   if (term.length < 2) {
-    updateResult(0);
+    closeDropdown();
     return;
   }
 
-  const count = highlightText(term);
-  openSectionsWithHits();
-  updateResult(count);
+  const results = index.filter((item) => {
+    return item.h3.toLowerCase().includes(term) || item.h2.toLowerCase().includes(term);
+  });
+
+  renderResults(results);
+  openDropdown();
 }
 
-function clearSearch() {
+searchInput.addEventListener("input", runSearch);
+searchClear.addEventListener("click", () => {
   searchInput.value = "";
-  unwrapMarks();
-  updateResult(0);
-}
+  closeDropdown();
+});
 
-searchBtn.addEventListener("click", runSearch);
-clearBtn.addEventListener("click", clearSearch);
-searchInput.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
-    runSearch();
+searchList.addEventListener("click", (event) => {
+  if (event.target.closest("a")) {
+    closeDropdown();
   }
 });
 
-function openFromHash() {
-  const id = window.location.hash.replace("#", "");
-  if (!id) {
-    return;
+window.addEventListener("click", (event) => {
+  if (!event.target.closest(".search-wrapper")) {
+    closeDropdown();
   }
-  const target = document.getElementById(id);
-  if (target && target.tagName.toLowerCase() === "details") {
-    target.open = true;
-  }
-}
-
-window.addEventListener("hashchange", openFromHash);
-window.addEventListener("load", openFromHash);
+});
