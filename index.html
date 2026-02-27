@@ -15,25 +15,62 @@
       <p class="lead">
         GeoGuessrを理論的に追求するための、思考過程や知識を体系的に整理した個人研究ブログです。
       </p>
+      <p class="lead">
+        <strong class="em">GeoGuessr初心者が知るべき基礎知識</strong>から導入し、段階的に理解を深めていけるように構成しています。
+      </p>
     </header>
 
     <section class="search" aria-label="検索">
+
       <label for="searchInput">ページ内検索</label>
+
       <div class="search-wrapper">
         <input id="searchInput" type="search" placeholder="例: 欧米諸国の見分け方" autocomplete="off" />
         <button id="searchClear" type="button">クリア</button>
+        
         <div class="search-dropdown" id="searchDropdown" hidden>
           <div class="search-count" id="searchCount">一致: 0</div>
           <ul id="searchList"></ul>
         </div>
+
       </div>
+
       <p class="hint">2文字以上で検索。本文の抜粋と、関連する見出しを表示。</p>
+
     </section>
+
+    <!-- 
+    Sample
+
+        <section class="section" id="inference">　←見出しにはidをつける
+          <h2>1. 推論フレーム</h2>
+          <p class="section-lead">「何から見るか」を固定して、判断のブレを減らす。</p>
+
+          <h3 id="inference-layer">情報のレイヤー分類</h3>
+          <p>
+            まずは情報を<strong class="em">層</strong>で見る。どの層が強い手がかりかを把握すると、焦点がズレなくなる。
+          </p>
+          <ul>
+            <li><strong class="em">言語</strong>: 標識、広告、地名、アルファベットの形</li>
+            <li>インフラ: 電柱、標識支柱、道路標示、ガードレール</li>
+            <li>地形: 山の稜線、河川の向き、視界の抜け方</li>
+            <li>気候: 植生、空の色、雪対策、乾燥度</li>
+            <li>人工物規格: 屋根材、窓枠、歩道の縁石</li>
+          </ul>    
+        </section>
+
+        また、目次も追加する
+        
+    -->
 
     <div class="layout">
       <aside class="toc" aria-label="目次">
         <h2>目次</h2>
         <nav class="toc-list">
+
+          <a href="#fundamentals">0. 基礎知識</a>
+          <a class="toc-sub" href="#what-is-geoguessr">GeoGuessrとは</a>
+
           <a href="#inference">1. 推論フレーム</a>
           <a class="toc-sub" href="#inference-layer">情報のレイヤー分類</a>
           <a class="toc-sub" href="#inference-order">判断順序テンプレ</a>
@@ -68,6 +105,15 @@
       </aside>
 
       <main class="content" id="content">
+
+        <section class="section" id="fundamentals">
+          <h2>0. 基礎知識</h2>
+          <h3 id="what-is-geoguessr">GeoGuessrとは</h3>
+          <p>
+            GeoGuessrは、Googleストリートビューの画像をもとに、世界のどこかを当てるゲームです。プレイヤーは、地理的な手がかりを分析して、正確な位置を推測します。
+          </p>
+        </section>
+        
         <section class="section" id="inference">
           <h2>1. 推論フレーム</h2>
           <p class="section-lead">「何から見るか」を固定して、判断のブレを減らす。</p>
