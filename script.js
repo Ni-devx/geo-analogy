@@ -28,11 +28,27 @@ const index = headings.map((h3) => {
     id: h3.id,
     h3: h3.textContent.trim(),
     h2: h2Text,
+    content: contentText,
     haystack: `${h2Text} ${contentText}`.toLowerCase(),
   };
 });
 
-function renderResults(results) {
+function buildSnippet(text, term, radius = 40) {
+  const lowerText = text.toLowerCase();
+  const index = lowerText.indexOf(term);
+  if (index === -1) {
+    return "";
+  }
+
+  const start = Math.max(0, index - 20);
+  const end = Math.min(text.length, index + term.length + radius);
+  const snippet = text.slice(start, end).trim();
+  const prefix = start > 0 ? "…" : "";
+  const suffix = end < text.length ? "…" : "";
+  return `${prefix}${snippet}${suffix}`;
+}
+
+function renderResults(results, term) {
   searchList.innerHTML = "";
   searchCount.textContent = `一致: ${results.length}`;
 
@@ -56,8 +72,16 @@ function renderResults(results) {
     h3Span.className = "search-h3";
     h3Span.textContent = item.h3;
 
+    const snippet = buildSnippet(item.content, term);
+    const snippetSpan = document.createElement("span");
+    snippetSpan.className = "search-snippet";
+    snippetSpan.textContent = snippet;
+
     a.appendChild(h2Span);
     a.appendChild(h3Span);
+    if (snippet) {
+      a.appendChild(snippetSpan);
+    }
     li.appendChild(a);
     searchList.appendChild(li);
   });
@@ -80,7 +104,7 @@ function runSearch() {
 
   const results = index.filter((item) => item.haystack.includes(term));
 
-  renderResults(results);
+  renderResults(results, term);
   openDropdown();
 }
 

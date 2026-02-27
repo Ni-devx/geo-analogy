@@ -137,6 +137,12 @@ h1 {
   font-weight: 700;
 }
 
+.search-snippet {
+  display: block;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
 .search-count {
   font-size: 0.85rem;
   color: var(--muted);
