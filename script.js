@@ -3,14 +3,72 @@ const searchClear = document.getElementById("searchClear");
 const searchDropdown = document.getElementById("searchDropdown");
 const searchList = document.getElementById("searchList");
 const searchCount = document.getElementById("searchCount");
+const tocList = document.getElementById("tocList");
+const main = document.querySelector("main");
 
-const headings = Array.from(document.querySelectorAll("main h3"));
+function slugify(text) {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\p{L}\p{N}]+/gu, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 64);
+}
+
+function ensureId(element, used, fallback) {
+  let base = element.id && element.id.trim() ? element.id.trim() : slugify(element.textContent || "");
+  if (!base) {
+    base = fallback;
+  }
+
+  let unique = base;
+  let count = 2;
+  while (used.has(unique)) {
+    unique = `${base}-${count}`;
+    count += 1;
+  }
+
+  element.id = unique;
+  used.add(unique);
+  return unique;
+}
+
+function buildTocAndIds() {
+  if (!main || !tocList) {
+    return [];
+  }
+
+  const headings = Array.from(main.querySelectorAll("h2, h3"));
+  const usedIds = new Set();
+  tocList.innerHTML = "";
+
+  headings.forEach((heading, index) => {
+    const tag = heading.tagName.toLowerCase();
+    const id = ensureId(heading, usedIds, `${tag}-${index + 1}`);
+
+    const link = document.createElement("a");
+    link.href = `#${id}`;
+    link.textContent = heading.textContent.trim();
+
+    if (tag === "h3") {
+      link.classList.add("toc-sub");
+    }
+
+    tocList.appendChild(link);
+  });
+
+  return headings;
+}
 
 function collectTextForHeading(h3) {
   let text = h3.textContent || "";
   let node = h3.nextElementSibling;
 
-  while (node && node.tagName.toLowerCase() !== "h3") {
+  while (node) {
+    const tag = node.tagName ? node.tagName.toLowerCase() : "";
+    if (tag === "h2" || tag === "h3") {
+      break;
+    }
     text += ` ${node.textContent || ""}`;
     node = node.nextElementSibling;
   }
@@ -18,20 +76,28 @@ function collectTextForHeading(h3) {
   return text.replace(/\s+/g, " ").trim();
 }
 
-const index = headings.map((h3) => {
-  const section = h3.closest("section");
-  const h2 = section ? section.querySelector("h2") : null;
-  const h2Text = h2 ? h2.textContent.trim() : "";
-  const contentText = collectTextForHeading(h3);
+function buildIndex() {
+  if (!main) {
+    return [];
+  }
 
-  return {
-    id: h3.id,
-    h3: h3.textContent.trim(),
-    h2: h2Text,
-    content: contentText,
-    haystack: `${h2Text} ${contentText}`.toLowerCase(),
-  };
-});
+  const headings = Array.from(main.querySelectorAll("h3"));
+
+  return headings.map((h3) => {
+    const section = h3.closest("section");
+    const h2 = section ? section.querySelector("h2") : null;
+    const h2Text = h2 ? h2.textContent.trim() : "";
+    const contentText = collectTextForHeading(h3);
+
+    return {
+      id: h3.id,
+      h3: h3.textContent.trim(),
+      h2: h2Text,
+      content: contentText,
+      haystack: `${h2Text} ${contentText}`.toLowerCase(),
+    };
+  });
+}
 
 function buildSnippet(text, term, radius = 40) {
   const lowerText = text.toLowerCase();
@@ -82,6 +148,7 @@ function renderResults(results, term) {
     if (snippet) {
       a.appendChild(snippetSpan);
     }
+
     li.appendChild(a);
     searchList.appendChild(li);
   });
@@ -95,33 +162,42 @@ function closeDropdown() {
   searchDropdown.hidden = true;
 }
 
-function runSearch() {
-  const term = searchInput.value.trim().toLowerCase();
-  if (term.length < 2) {
-    closeDropdown();
+function initSearch(index) {
+  if (!searchInput) {
     return;
   }
 
-  const results = index.filter((item) => item.haystack.includes(term));
+  function runSearch() {
+    const term = searchInput.value.trim().toLowerCase();
+    if (term.length < 2) {
+      closeDropdown();
+      return;
+    }
 
-  renderResults(results, term);
-  openDropdown();
+    const results = index.filter((item) => item.haystack.includes(term));
+    renderResults(results, term);
+    openDropdown();
+  }
+
+  searchInput.addEventListener("input", runSearch);
+  searchClear.addEventListener("click", () => {
+    searchInput.value = "";
+    closeDropdown();
+  });
+
+  searchList.addEventListener("click", (event) => {
+    if (event.target.closest("a")) {
+      closeDropdown();
+    }
+  });
+
+  window.addEventListener("click", (event) => {
+    if (!event.target.closest(".search-wrapper")) {
+      closeDropdown();
+    }
+  });
 }
 
-searchInput.addEventListener("input", runSearch);
-searchClear.addEventListener("click", () => {
-  searchInput.value = "";
-  closeDropdown();
-});
-
-searchList.addEventListener("click", (event) => {
-  if (event.target.closest("a")) {
-    closeDropdown();
-  }
-});
-
-window.addEventListener("click", (event) => {
-  if (!event.target.closest(".search-wrapper")) {
-    closeDropdown();
-  }
-});
+buildTocAndIds();
+const index = buildIndex();
+initSearch(index);

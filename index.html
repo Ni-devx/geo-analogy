@@ -9,7 +9,7 @@
 </head>
 <body>
   <div class="page">
-    <header class="hero" id="top">
+    <header class="hero">
       <p class="eyebrow">GeoGuessr Strategy Summary</p>
       <h1>Geo Analogy</h1>
       <p class="lead">
@@ -35,90 +35,36 @@
 
       </div>
 
-      <p class="hint">2文字以上で検索。本文の抜粋と、関連する見出しを表示。</p>
+      <p class="hint">2文字以上で検索。本文の抜粋と、関連する見出しを表示（目次・idは自動生成）。</p>
 
     </section>
 
-    <!-- 
-    Sample
-
-        <section class="section" id="inference">　←見出しにはidをつける
-          <h2>1. 推論フレーム</h2>
-          <p class="section-lead">「何から見るか」を固定して、判断のブレを減らす。</p>
-
-          <h3 id="inference-layer">情報のレイヤー分類</h3>
-          <p>
-            まずは情報を<strong class="em">層</strong>で見る。どの層が強い手がかりかを把握すると、焦点がズレなくなる。
-          </p>
-          <ul>
-            <li><strong class="em">言語</strong>: 標識、広告、地名、アルファベットの形</li>
-            <li>インフラ: 電柱、標識支柱、道路標示、ガードレール</li>
-            <li>地形: 山の稜線、河川の向き、視界の抜け方</li>
-            <li>気候: 植生、空の色、雪対策、乾燥度</li>
-            <li>人工物規格: 屋根材、窓枠、歩道の縁石</li>
-          </ul>    
-        </section>
-
-        また、目次も追加する
-        
+    <!--
+      更新ルール: h2 / h3 を書くだけでOK。
+      目次とidは自動生成されます（手動idもそのまま利用可）。
     -->
 
     <div class="layout">
       <aside class="toc" aria-label="目次">
         <h2>目次</h2>
-        <nav class="toc-list">
-
-          <a href="#fundamentals">0. 基礎知識</a>
-          <a class="toc-sub" href="#what-is-geoguessr">GeoGuessrとは</a>
-
-          <a href="#inference">1. 推論フレーム</a>
-          <a class="toc-sub" href="#inference-layer">情報のレイヤー分類</a>
-          <a class="toc-sub" href="#inference-order">判断順序テンプレ</a>
-          <a class="toc-sub" href="#inference-30s">初動30秒理論</a>
-          <a class="toc-sub" href="#inference-note">推論メモの型</a>
-
-          <a href="#japan">2. 日本攻略</a>
-          <a class="toc-sub" href="#japan-pole">電柱</a>
-          <a class="toc-sub" href="#japan-sign">標識</a>
-          <a class="toc-sub" href="#japan-road">道路</a>
-          <a class="toc-sub" href="#japan-house">住宅</a>
-          <a class="toc-sub" href="#japan-terrain">地形</a>
-
-          <a href="#world">3. 世界攻略</a>
-          <a class="toc-sub" href="#world-start">初動判定</a>
-          <a class="toc-sub" href="#world-plate">ナンバープレート</a>
-          <a class="toc-sub" href="#world-line">道路線</a>
-          <a class="toc-sub" href="#world-sign">標識</a>
-          <a class="toc-sub" href="#world-climate">気候・植生</a>
-          <a class="toc-sub" href="#world-vehicle">車・路面</a>
-
-          <a href="#pitfalls">4. よくある誤認</a>
-          <a class="toc-sub" href="#pitfalls-pairs">代表的な誤認ペア</a>
-          <a class="toc-sub" href="#pitfalls-axis">見分ける軸</a>
-          <a class="toc-sub" href="#pitfalls-cause">ミスの原因</a>
-
-          <a href="#research">5. 今後の研究課題</a>
-          <a class="toc-sub" href="#research-open">未整理分野</a>
-          <a class="toc-sub" href="#research-next">追加予定</a>
-          <a class="toc-sub" href="#research-log">検証ログの型</a>
-        </nav>
+        <nav class="toc-list" id="tocList"></nav>
       </aside>
 
-      <main class="content" id="content">
+      <main class="content">
 
-        <section class="section" id="fundamentals">
+        <section class="section">
           <h2>0. 基礎知識</h2>
-          <h3 id="what-is-geoguessr">GeoGuessrとは</h3>
+          <h3>GeoGuessrとは</h3>
           <p>
             GeoGuessrは、Googleストリートビューの画像をもとに、世界のどこかを当てるゲームです。プレイヤーは、地理的な手がかりを分析して、正確な位置を推測します。
           </p>
         </section>
         
-        <section class="section" id="inference">
+        <section class="section">
           <h2>1. 推論フレーム</h2>
           <p class="section-lead">「何から見るか」を固定して、判断のブレを減らす。</p>
 
-          <h3 id="inference-layer">情報のレイヤー分類</h3>
+          <h3>情報のレイヤー分類</h3>
           <p>
             まずは情報を<strong class="em">層</strong>で見る。どの層が強い手がかりかを把握すると、焦点がズレなくなる。
           </p>
@@ -130,7 +76,7 @@
             <li>人工物規格: 屋根材、窓枠、歩道の縁石</li>
           </ul>
 
-          <h3 id="inference-order">判断順序テンプレ</h3>
+          <h3>判断順序テンプレ</h3>
           <ol>
             <li>走行方向・言語系統・Googleカー</li>
             <li>道路線・標識形・ナンバープレート</li>
@@ -141,7 +87,7 @@
             ポイントは<strong class="em">序盤で仮説を置く</strong>こと。仮説を置くと「反証探し」ができる。
           </p>
 
-          <h3 id="inference-30s">初動30秒理論</h3>
+          <h3>初動30秒理論</h3>
           <p>
             30秒以内に「国 or 地域の当たり」を出す。残りは細部の検証に使う。
           </p>
@@ -151,7 +97,7 @@
             <li>反証が出たら<strong class="em">仮説を捨てる勇気</strong>を持つ</li>
           </ul>
 
-          <h3 id="inference-note">推論メモの型</h3>
+          <h3>推論メモの型</h3>
           <p>
             メモは「観察→仮説→反証」の順で記録すると再利用しやすい。
           </p>
@@ -162,11 +108,11 @@
           </ul>
         </section>
 
-        <section class="section" id="japan">
+        <section class="section">
           <h2>2. 日本攻略</h2>
           <p class="section-lead">一致レベルまで絞るための比較ポイント。</p>
 
-          <h3 id="japan-pole">電柱</h3>
+          <h3>電柱</h3>
           <ul>
             <li>腕の数: 1〜3本の出方。<strong class="em">横向きの腕が多いほど都市部寄り</strong></li>
             <li>変圧器: 形・数・配置。地域によって配置の癖がある</li>
@@ -174,28 +120,28 @@
             <li>地域傾向: 北日本は雪対策で高所配線が多い</li>
           </ul>
 
-          <h3 id="japan-sign">標識</h3>
+          <h3>標識</h3>
           <ul>
             <li>フォント: ゴシック系の太さ、丸み</li>
             <li>形状: 角の丸さ、縁取りの太さ</li>
             <li>支柱タイプ: 丸柱/角柱、反射材の色</li>
           </ul>
 
-          <h3 id="japan-road">道路</h3>
+          <h3>道路</h3>
           <ul>
             <li>ガードレール: 形状/支柱間隔。<strong class="em">波形の深さ</strong>に注目</li>
             <li>センターライン: 色と破線パターン</li>
             <li>歩道構造: 段差/縁石の材質、点字ブロックの配置</li>
           </ul>
 
-          <h3 id="japan-house">住宅</h3>
+          <h3>住宅</h3>
           <ul>
             <li>屋根傾斜: 雪対策/台風対策</li>
             <li>壁材: サイディング/木材/タイル</li>
             <li>雪対策構造: 高床/落雪防止の形</li>
           </ul>
 
-          <h3 id="japan-terrain">地形</h3>
+          <h3>地形</h3>
           <ul>
             <li>山の形: 稜線の連続性</li>
             <li>平野の広がり: 視界の抜け感</li>
@@ -203,11 +149,11 @@
           </ul>
         </section>
 
-        <section class="section" id="world">
+        <section class="section">
           <h2>3. 世界攻略</h2>
           <p class="section-lead">国特定までを最速で整理。</p>
 
-          <h3 id="world-start">初動判定</h3>
+          <h3>初動判定</h3>
           <ul>
             <li>走行方向: 左/右</li>
             <li>言語系統: ラテン/キリル/アラビア/漢字</li>
@@ -215,7 +161,7 @@
             <li><strong class="em">道路線の色</strong>は最初に確認する</li>
           </ul>
 
-          <h3 id="world-plate">ナンバープレート</h3>
+          <h3>ナンバープレート</h3>
           <ul>
             <li>色: 白/黄/青</li>
             <li>位置: 前後/後のみ</li>
@@ -223,28 +169,28 @@
             <li>サイズ感: 横長/縦長で国を絞る</li>
           </ul>
 
-          <h3 id="world-line">道路線</h3>
+          <h3>道路線</h3>
           <ul>
             <li>黄色か白か</li>
             <li>破線パターン: 長短・密度</li>
             <li>路肩線: 有無と色</li>
           </ul>
 
-          <h3 id="world-sign">標識</h3>
+          <h3>標識</h3>
           <ul>
             <li>フォント: 角ばり/丸み</li>
             <li>警告標識形: 三角/ひし形</li>
             <li>支柱・反射材: 形と色</li>
           </ul>
 
-          <h3 id="world-climate">気候・植生</h3>
+          <h3>気候・植生</h3>
           <ul>
             <li>乾燥度: 砂の色、草の密度</li>
             <li>植生: ユーカリ/針葉樹/ヤシの有無</li>
             <li>空の色: 霞み、湿度感</li>
           </ul>
 
-          <h3 id="world-vehicle">車・路面</h3>
+          <h3>車・路面</h3>
           <ul>
             <li>車種: ピックアップが多い地域/少ない地域</li>
             <li>路面: アスファルトの色、補修跡</li>
@@ -252,11 +198,11 @@
           </ul>
         </section>
 
-        <section class="section" id="pitfalls">
+        <section class="section">
           <h2>4. よくある誤認</h2>
           <p class="section-lead"><strong class="em">誤認ペア</strong>は最重要。似ている理由を言語化する。</p>
 
-          <h3 id="pitfalls-pairs">代表的な誤認ペア</h3>
+          <h3>代表的な誤認ペア</h3>
           <ul>
             <li>北海道とカナダ</li>
             <li>九州と韓国南部</li>
@@ -265,7 +211,7 @@
             <li>オーストラリアと南アフリカ</li>
           </ul>
 
-          <h3 id="pitfalls-axis">見分ける軸</h3>
+          <h3>見分ける軸</h3>
           <ul>
             <li>道路線の色・太さ</li>
             <li>標識フォントの形</li>
@@ -273,7 +219,7 @@
             <li>建築材の色と質感</li>
           </ul>
 
-          <h3 id="pitfalls-cause">ミスの原因</h3>
+          <h3>ミスの原因</h3>
           <ul>
             <li><strong class="em">先入観</strong>で決め打ちする</li>
             <li>反証を探さずに進める</li>
@@ -281,25 +227,25 @@
           </ul>
         </section>
 
-        <section class="section" id="research">
+        <section class="section">
           <h2>5. 今後の研究課題</h2>
           <p class="section-lead">未整理領域を洗い出し、次の追加につなげる。</p>
 
-          <h3 id="research-open">未整理分野</h3>
+          <h3>未整理分野</h3>
           <ul>
             <li>地方都市の配線パターン</li>
             <li>農地インフラの差</li>
             <li>沿岸部の標識規格</li>
           </ul>
 
-          <h3 id="research-next">追加予定</h3>
+          <h3>追加予定</h3>
           <ul>
             <li>画像データベース化</li>
             <li>日本/世界のページ分割</li>
             <li>推論テンプレの改善</li>
           </ul>
 
-          <h3 id="research-log">検証ログの型</h3>
+          <h3>検証ログの型</h3>
           <ul>
             <li>日時 / マップ / 予想 / 結果</li>
             <li>決め手になった要素</li>
