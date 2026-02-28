@@ -41,6 +41,7 @@ function buildTocAndIds() {
   const headings = Array.from(main.querySelectorAll("h2, h3"));
   const usedIds = new Set();
   tocList.innerHTML = "";
+  const items = [];
 
   headings.forEach((heading, index) => {
     const tag = heading.tagName.toLowerCase();
@@ -55,9 +56,10 @@ function buildTocAndIds() {
     }
 
     tocList.appendChild(link);
+    items.push({ heading, link });
   });
 
-  return headings;
+  return items;
 }
 
 function collectTextForHeading(h3) {
@@ -198,6 +200,41 @@ function initSearch(index) {
   });
 }
 
-buildTocAndIds();
+function initTocHighlight(items) {
+  if (!items.length) {
+    return;
+  }
+
+  let activeLink = null;
+
+  function setActive(id) {
+    const item = items.find((entry) => entry.heading.id === id);
+    if (!item) {
+      return;
+    }
+    if (activeLink) {
+      activeLink.classList.remove("toc-active");
+    }
+    activeLink = item.link;
+    activeLink.classList.add("toc-active");
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActive(entry.target.id);
+        }
+      });
+    },
+    { rootMargin: "-20% 0px -70% 0px", threshold: 0.01 }
+  );
+
+  items.forEach((item) => observer.observe(item.heading));
+  setActive(items[0].heading.id);
+}
+
+const tocItems = buildTocAndIds();
+initTocHighlight(tocItems);
 const index = buildIndex();
 initSearch(index);

@@ -190,7 +190,8 @@ h1 {
 }
 
 .toc-list a:hover,
-.toc-list a:focus {
+.toc-list a:focus,
+.toc-list a.toc-active {
   font-weight: 700;
   color: var(--text);
 }

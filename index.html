@@ -21,22 +21,17 @@
     </header>
 
     <section class="search" aria-label="検索">
-
       <label for="searchInput">ページ内検索</label>
-
       <div class="search-wrapper">
-        <input id="searchInput" type="search" placeholder="例: 欧米諸国の見分け方" autocomplete="off" />
+        <input id="searchInput" type="search" placeholder="例: 電柱 / ナンバープレート / 初動" autocomplete="off" />
         <button id="searchClear" type="button">クリア</button>
-        
+
         <div class="search-dropdown" id="searchDropdown" hidden>
           <div class="search-count" id="searchCount">一致: 0</div>
           <ul id="searchList"></ul>
         </div>
-
       </div>
-
       <p class="hint">1文字以上で検索。本文の抜粋と、関連する見出しを表示（目次・idは自動生成）。</p>
-
     </section>
 
     <!--
@@ -45,30 +40,48 @@
     -->
 
     <div class="layout">
-      
       <aside class="toc" aria-label="目次">
         <h2>目次</h2>
         <nav class="toc-list" id="tocList"></nav>
       </aside>
 
       <main class="content">
-
         <section class="section">
           <h2>0. 基礎知識</h2>
+          <p class="section-lead">まずは「何を見ればいいか」を短時間で掴む。</p>
+
           <h3>GeoGuessrとは</h3>
           <p>
-            GeoGuessrは、Googleストリートビューの画像をもとに、世界のどこかを当てるゲームです。プレイヤーは、地理的な手がかりを分析して、正確な位置を推測します。
+            GeoGuessrはストリートビューから場所を当てるゲーム。勝敗は<strong class="em">観察→仮説→反証</strong>の速度と精度で決まる。
           </p>
+
+          <h3>このノートの使い方</h3>
+          <ul>
+            <li>h2は大枠、h3は判断ポイント。<strong class="em">h3単位で覚える</strong></li>
+            <li>自分の言葉で言い換えられるまで短いメモにする</li>
+            <li>誤認ペアは「差が出るポイント」を1行で記録</li>
+          </ul>
+
+          <h3>推論のゴール設定</h3>
+          <ul>
+            <li>日本: 一致レベルを目指す（都道府県→市区町村）</li>
+            <li>世界: 国特定までを最短化</li>
+            <li>時間重視か精度重視かで見るポイントが変わる</li>
+          </ul>
+
+          <h3>勝ち筋の基本</h3>
+          <ul>
+            <li>最初の30秒で<strong class="em">大枠仮説</strong></li>
+            <li>反証が出たら仮説を切り替える</li>
+            <li>「似ている」だけで止めず比較する</li>
+          </ul>
         </section>
-        
+
         <section class="section">
           <h2>1. 推論フレーム</h2>
           <p class="section-lead">「何から見るか」を固定して、判断のブレを減らす。</p>
 
           <h3>情報のレイヤー分類</h3>
-          <p>
-            まずは情報を<strong class="em">層</strong>で見る。どの層が強い手がかりかを把握すると、焦点がズレなくなる。
-          </p>
           <ul>
             <li><strong class="em">言語</strong>: 標識、広告、地名、アルファベットの形</li>
             <li>インフラ: 電柱、標識支柱、道路標示、ガードレール</li>
@@ -84,24 +97,22 @@
             <li>建築規格・電柱・地形</li>
             <li>地域差: 北/南、沿岸/内陸、都市/郊外</li>
           </ol>
-          <p>
-            ポイントは<strong class="em">序盤で仮説を置く</strong>こと。仮説を置くと「反証探し」ができる。
-          </p>
 
           <h3>初動30秒理論</h3>
-          <p>
-            30秒以内に「国 or 地域の当たり」を出す。残りは細部の検証に使う。
-          </p>
           <ul>
             <li>最初に見るのは<strong class="em">言語・道路線・車体</strong></li>
             <li>迷ったら「大陸」→「国」→「地域」の順で仮説を縮める</li>
-            <li>反証が出たら<strong class="em">仮説を捨てる勇気</strong>を持つ</li>
+            <li>反証が出たら<strong class="em">仮説を捨てる勇気</strong></li>
+          </ul>
+
+          <h3>反証思考のチェックリスト</h3>
+          <ul>
+            <li>標識フォントは仮説国と一致するか</li>
+            <li>道路線の色・太さは合っているか</li>
+            <li>家屋・植生は気候と矛盾しないか</li>
           </ul>
 
           <h3>推論メモの型</h3>
-          <p>
-            メモは「観察→仮説→反証」の順で記録すると再利用しやすい。
-          </p>
           <ul>
             <li>観察: 「白ナンバー」「三角警告標識」「乾いた草地」</li>
             <li>仮説: 「南米の可能性」</li>
@@ -113,12 +124,18 @@
           <h2>2. 日本攻略</h2>
           <p class="section-lead">一致レベルまで絞るための比較ポイント。</p>
 
+          <h3>地域差の入口</h3>
+          <ul>
+            <li>北/南: 雪対策、屋根傾斜、植生</li>
+            <li>沿岸/内陸: 風よけ構造、海沿いの防波設備</li>
+            <li>都市/郊外: 配線密度、道路の幅、歩道構造</li>
+          </ul>
+
           <h3>電柱</h3>
           <ul>
             <li>腕の数: 1〜3本の出方。<strong class="em">横向きの腕が多いほど都市部寄り</strong></li>
             <li>変圧器: 形・数・配置。地域によって配置の癖がある</li>
             <li>配線密度: 都市部は密、地方は疎。<strong class="em">高さ</strong>も重要</li>
-            <li>地域傾向: 北日本は雪対策で高所配線が多い</li>
           </ul>
 
           <h3>標識</h3>
@@ -148,6 +165,13 @@
             <li>平野の広がり: 視界の抜け感</li>
             <li>河川の向き: 山地との位置関係</li>
           </ul>
+
+          <h3>生活サイン</h3>
+          <ul>
+            <li>自販機の密度、看板の色味、歩行者の雰囲気</li>
+            <li>電車/バス停のデザイン差</li>
+            <li>観光地特有の表示（多言語案内の量）</li>
+          </ul>
         </section>
 
         <section class="section">
@@ -160,6 +184,13 @@
             <li>言語系統: ラテン/キリル/アラビア/漢字</li>
             <li>Googleカー: 車体色、アンテナ、写り込み</li>
             <li><strong class="em">道路線の色</strong>は最初に確認する</li>
+          </ul>
+
+          <h3>言語のクセ</h3>
+          <ul>
+            <li>アクセント記号の有無（á, ö, ñ など）</li>
+            <li>文字の丸み・角ばりで地域を推測</li>
+            <li>短い単語でも国が特定できることが多い</li>
           </ul>
 
           <h3>ナンバープレート</h3>
@@ -197,6 +228,13 @@
             <li>路面: アスファルトの色、補修跡</li>
             <li>縁石: 色塗りの有無</li>
           </ul>
+
+          <h3>Googleカーの特徴</h3>
+          <ul>
+            <li>車体の色・ルーフラックの有無</li>
+            <li>アンテナの形、ボンネット写り込み</li>
+            <li>車体の影の出方（低い/高い）</li>
+          </ul>
         </section>
 
         <section class="section">
@@ -220,11 +258,25 @@
             <li>建築材の色と質感</li>
           </ul>
 
+          <h3>反証チェック</h3>
+          <ul>
+            <li>「似ている理由」と「違う理由」を同時に書く</li>
+            <li>3つの反証が見つからないなら保留にする</li>
+            <li>決め手は1つでなく<strong class="em">複数の一致</strong></li>
+          </ul>
+
           <h3>ミスの原因</h3>
           <ul>
             <li><strong class="em">先入観</strong>で決め打ちする</li>
             <li>反証を探さずに進める</li>
             <li>「似てる」で止めて比較をしない</li>
+          </ul>
+
+          <h3>再発防止メモ</h3>
+          <ul>
+            <li>誤認ペアは「決定的な差」を1行で書く</li>
+            <li>間違えた回数と要因を記録する</li>
+            <li>月1で復習する</li>
           </ul>
         </section>
 
@@ -253,8 +305,9 @@
             <li>次回検証するポイント</li>
           </ul>
 
+          <h3>挿入サンプル</h3>
           <div class="sample-block">
-            <p class="sample-title">挿入サンプル（画像・比較メモの置き方）</p>
+            <p class="sample-title">画像・比較メモの置き方</p>
             <figure class="sample-figure">
               <div class="sample-box">ここに画像やスクリーンショット</div>
               <figcaption>例: 北海道の電柱。変圧器の形と配線密度を比較メモする。</figcaption>
