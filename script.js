@@ -169,7 +169,7 @@ function initSearch(index) {
 
   function runSearch() {
     const term = searchInput.value.trim().toLowerCase();
-    if (term.length < 2) {
+    if (term.length < 1) {
       closeDropdown();
       return;
     }
